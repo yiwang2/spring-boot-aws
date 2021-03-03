@@ -9,7 +9,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -26,6 +25,8 @@ import com.genesys.application.model.Elevator;
 import com.genesys.application.model.ElevatorState;
 import com.genesys.application.service.BuildingService;
 import com.genesys.application.service.ElevatorService;
+import com.genesys.application.utils.BuildingUtils;
+import com.genesys.application.utils.ElevatorUtils;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(value = BuildingController.class)
@@ -47,7 +48,7 @@ public class BuildingControllerTest {
 		String buildingName = "building 1";
 		String location = "somewhere";
 		String[] elevatorIdArray = { "1", "2", "3" };
-		Building buildingTest = this.createTestBuilding(buildingId, buildingName, location, elevatorIdArray);
+		Building buildingTest = BuildingUtils.createBuilding(buildingId, buildingName, location, elevatorIdArray);
 		List<Building> buildings = new ArrayList<>();
 		buildings.add(buildingTest);
 
@@ -69,10 +70,10 @@ public class BuildingControllerTest {
 		String buildingName = "building 1";
 		String location = "somewhere";
 		String[] elevatorIdArray = { elevatorId };
-		Building buildingTest = this.createTestBuilding(buildingId, buildingName, location, elevatorIdArray);
+		Building buildingTest = BuildingUtils.createBuilding(buildingId, buildingName, location, elevatorIdArray);
 
 		ElevatorState state = ElevatorState.STOPPED;
-		Elevator elevatorTest = this.createTestElevator(elevatorId, state);
+		Elevator elevatorTest = ElevatorUtils.createElevator(elevatorId, state);
 
 		List<String> elevatorIds = new ArrayList<>();
 		elevatorIds.add(elevatorId);
@@ -93,19 +94,5 @@ public class BuildingControllerTest {
 		reset(elevatorService);
 	}
 
-	private Building createTestBuilding(String buildingId, String buildingName, String location,
-			String[] elevatorIdArray) {
-		List<String> elevatorIds = Arrays.asList(elevatorIdArray);
-		Building buildingTest = new Building(buildingName, location, elevatorIds);
-		buildingTest.setId(buildingId);
-		return buildingTest;
-	}
-
-	private Elevator createTestElevator(String elevatorId, ElevatorState state) {
-		Elevator elevatorTest = new Elevator();
-		elevatorTest.setId(elevatorId);
-		elevatorTest.setState(state);
-
-		return elevatorTest;
-	}
+	
 }
