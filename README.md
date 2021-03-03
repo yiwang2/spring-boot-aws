@@ -7,9 +7,10 @@
 - Depends on: Java 8 + Spring boot 2.4.3 + Mysql8
 - Libs: please check maven pom.xml
 
-## Build local
+## Build and unit test
 
 - mvn clean install
+- mvn clean test
 
 ## API enpoints management
 
