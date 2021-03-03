@@ -20,4 +20,6 @@
 
 - local: localhost
 - aws: http://userbuildingelevatoraws-env.eba-tfikzzna.eu-west-1.elasticbeanstalk.com/
-- aws rds for MySQL
+
+## API
+
