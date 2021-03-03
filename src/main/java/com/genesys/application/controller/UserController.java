@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.genesys.application.model.Building;
 import com.genesys.application.model.User;
+import com.genesys.application.model.dto.UserSaveDTO;
 import com.genesys.application.model.dto.UserUpdateDTO;
 import com.genesys.application.service.BuildingService;
 import com.genesys.application.service.UserService;
@@ -56,24 +57,24 @@ public class UserController {
 
 	/**
 	 * @param user
-	 * @return String - user id
+	 * @return String - user id in json {id : XXXXX}
 	 * 
 	 *         As the new user is added and the user id is auto generated, the
 	 *         returned user id will help to address the new user
 	 */
 	@PostMapping("/user")
-	public String addNewUser(@Valid @RequestBody User user) {
+	public UserSaveDTO addNewUser(@Valid @RequestBody User user) {
 		return this.userService.saveUser(user);
 	}
 
 	/**
 	 * @param user dto - user with updated data
 	 * @param id   - user id
-	 * @return String user id 
+	 * @return String - user id in json {id : XXXXX}
 	 * Update user name or building ids
 	 */
 	@PutMapping("/user/{id}")
-	public String updateUserBuildingInfo(@Valid @RequestBody UserUpdateDTO user, @NotBlank @PathVariable String id) {
+	public UserSaveDTO updateUserBuildingInfo(@Valid @RequestBody UserUpdateDTO user, @NotBlank @PathVariable String id) {
 		User existingUser = userService.findUserById(id);
 		if (user.getName() != null) {
 			existingUser.setName(user.getName());

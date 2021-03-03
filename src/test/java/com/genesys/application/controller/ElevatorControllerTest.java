@@ -26,6 +26,7 @@ import com.genesys.application.model.ElevatorState;
 import com.genesys.application.model.Floor;
 import com.genesys.application.service.ElevatorService;
 import com.genesys.application.service.FloorService;
+import com.genesys.application.utils.ElevatorUtils;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(value = ElevatorController.class)
@@ -49,7 +50,7 @@ public class ElevatorControllerTest {
 		String elevatorId = "testElevatorId";
 		List<Floor> floors = this.createFloors();
 		Integer[] floorIds = new Integer[] { 1, 2, 3 };
-		Elevator elevator = this.createElevatorWithFloorId(elevatorId, Arrays.asList(floorIds));
+		Elevator elevator = ElevatorUtils.createElevator(elevatorId, Arrays.asList(floorIds));
 
 		given(elevatorService.findElevatorById(elevatorId)).willReturn(elevator);
 		given(floorService.findFloorByIds(Arrays.asList(floorIds))).willReturn(floors);
@@ -76,7 +77,7 @@ public class ElevatorControllerTest {
 		ElevatorState newState = ElevatorState.UP;
 		
 		//mock the existing elevator
-		Elevator elevator = this.createElevatorWithStatus(elevatorId, currentFloorId, currentState);
+		Elevator elevator = ElevatorUtils.createElevator(elevatorId, currentFloorId, currentState);
 		given(elevatorService.findElevatorById(elevatorId)).willReturn(elevator);
 		
 		//mock the update
@@ -88,7 +89,7 @@ public class ElevatorControllerTest {
 		mvc.perform(put("/elevator/" + elevatorId)
 				           .contentType(MediaType.APPLICATION_JSON_VALUE)
 				           .accept(MediaType.APPLICATION_JSON)
-				           .content(getElevatorStatusDTOJson(elevatorId, newState, newFloorId)))
+				           .content(ElevatorUtils.createElevatorStatusDTOJson(elevatorId, newState, newFloorId)))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.id", is(elevatorId)))
         .andExpect(jsonPath("$.state", is(newState.getCode())))
@@ -107,24 +108,5 @@ public class ElevatorControllerTest {
 		floors.add(floorFirst);
 
 		return floors;
-	}
-
-	private Elevator createElevatorWithFloorId(String elevatorId, List<Integer> floorIds) {
-		Elevator elevator = new Elevator();
-		elevator.setId(elevatorId);
-		elevator.setFloorIds(floorIds);
-		return elevator;
-	}
-	
-	private Elevator createElevatorWithStatus (String elevatorId, Integer currentFloorId, ElevatorState currentState) {
-		Elevator elevator = new Elevator();
-		elevator.setId(elevatorId);
-		elevator.setCurrentFloorId(currentFloorId);
-		elevator.setState(currentState);
-		return elevator;
-	}
-	
-	private String getElevatorStatusDTOJson (String id, ElevatorState state, Integer currentFloorId) {
-		return "{\"id\":\"" + id + "\",\"state\":\""+state.getCode()+"\", \"currentFloorId\": \""+currentFloorId.intValue()+"\"}";
 	}
 }
