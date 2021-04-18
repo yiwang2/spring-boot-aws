@@ -1,4 +1,4 @@
-# GenesysCodeChallenge
+# CodeChallenge
 
 ## Tools, libs and IDE
 
